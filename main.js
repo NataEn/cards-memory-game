@@ -17,9 +17,51 @@ class Game {
     this.difficulty = difficulty;
     this.imagesOnBoard = [];
   }
-  returnCard() {}
-  returnImagesAccordingToTheme(theme) {}
+  shuffleCards = imagesArray => {
+    let j, x, i;
+    for (i = imagesArray.length - 1; i > 0; i--) {
+      j = Math.floor(Math.random() * (i + 1));
+      x = imagesSrcArray[i];
+      imagesArray[i] = imagesArray[j];
+      imagesArray[j] = x;
+    }
+    return imagesArray;
+  };
+  getRandomDuplicateImages = windowImagesNameArray => {
+    let imagesForGame = [];
+    for (let i = 0; i < this.difficulty; i++) {
+      let randomImageIndex = Math.floor(Math.random() * this.difficulty);
+      let possibleImage = windowImagesNameArray[randomImageIndex];
+      if (!imagesForGame.includes(possibleImage)) {
+        imagesForGame.push(possibleImage);
+        imagesForGame.push(possibleImage);
+      }
+    }
+    return shuffleCards(imagesForGame);
+  };
+  returnCardElement(imgName) {
+    let card = document.createElement("div");
+    card.setAttribute("class", "card-flip");
+    let cardBack = document.createElement("img");
+    cardBack.setAttribute("src", `./img/${this.theme}/${imgName}.jpg`);
+    cardBack.setAttribute("class", "cardBack img-fluid img-thumbnail");
+    cardBack.setAttribute("alt", `cardBack-${imgName}`);
+    let cardFront = document.createElement("img");
+    cardFront.setAttribute("src", "./img/cardFront.jpg");
+    cardFront.setAttribute("class", "cardFront img-fluid img-thumbnail");
+    cardFront.setAttribute("alt", "cardFront");
+    card.appendChild(cardBack);
+    card.appendChild(cardFront);
+    return card;
+  }
+  addCardsToBoard(boardElement, shuffledImagesNamesArray) {
+    for (let imageName of shuffledImagesNamesArray) {
+      let cardElement = returnCardElement(imgName);
+      boardElement.appendChild(cardElement);
+    }
+  }
 }
+
 WindowGame = {};
 WindowGame.animalImages = [
   "bird",
@@ -62,7 +104,6 @@ WindowGame.veggetableImages = [
   "radish",
   "tomato"
 ];
-
 WindowGame.fruitImages = [
   "banana",
   "blueberry",
@@ -82,4 +123,5 @@ WindowGame.fruitImages = [
   "strawberry",
   "watermellon"
 ];
+WindowGame.board = document.querySelector(".cards");
 WindowGame.allocateImagesToGame = () => {};

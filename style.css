@@ -1,4 +1,4 @@
-.card-flip > div {
+.card-flip {
   backface-visibility: hidden;
   transition: transform 300ms;
   transition-timing-function: linear;
