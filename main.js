@@ -12,7 +12,7 @@ class Player {
 }
 
 class Game {
-  constructor(theme, difficulty) {
+  constructor(theme = "animals", difficulty = 6) {
     this.theme = theme;
     this.difficulty = difficulty;
     this.imagesOnBoard = [];
@@ -21,42 +21,51 @@ class Game {
     let j, x, i;
     for (i = imagesArray.length - 1; i > 0; i--) {
       j = Math.floor(Math.random() * (i + 1));
-      x = imagesSrcArray[i];
+      x = imagesArray[i];
       imagesArray[i] = imagesArray[j];
       imagesArray[j] = x;
     }
     return imagesArray;
   };
+  //fix to have 12 cards
   getRandomDuplicateImages = windowImagesNameArray => {
     let imagesForGame = [];
     for (let i = 0; i < this.difficulty; i++) {
       let randomImageIndex = Math.floor(Math.random() * this.difficulty);
       let possibleImage = windowImagesNameArray[randomImageIndex];
       if (!imagesForGame.includes(possibleImage)) {
-        imagesForGame.push(possibleImage);
-        imagesForGame.push(possibleImage);
+        imagesForGame.push(...[possibleImage, possibleImage]);
       }
     }
-    return shuffleCards(imagesForGame);
+    let suffledCards = this.shuffleCards(imagesForGame);
+
+    return suffledCards;
   };
   returnCardElement(imgName) {
     let card = document.createElement("div");
-    card.setAttribute("class", "card-flip");
-    let cardBack = document.createElement("img");
-    cardBack.setAttribute("src", `./img/${this.theme}/${imgName}.jpg`);
-    cardBack.setAttribute("class", "cardBack img-fluid img-thumbnail");
-    cardBack.setAttribute("alt", `cardBack-${imgName}`);
-    let cardFront = document.createElement("img");
-    cardFront.setAttribute("src", "./img/cardFront.jpg");
-    cardFront.setAttribute("class", "cardFront img-fluid img-thumbnail");
-    cardFront.setAttribute("alt", "cardFront");
+    card.setAttribute("class", " card-image-container card-flip");
+    let cardBack = document.createElement("div");
+    cardBack.setAttribute(
+      "style",
+      `background-image:url("./img/${this.theme}/${imgName}.jpg")`
+    );
+    cardBack.setAttribute("class", " card-flip  card-back");
+    cardBack.setAttribute("data-id", `cardBack-${imgName}`);
+    console.log(cardBack);
+    let cardFront = document.createElement("div");
+    cardFront.setAttribute(
+      "style",
+      'background-image:url("./img/cardFront.jpg")'
+    );
+    cardFront.setAttribute("class", "card-flip card-front");
+    cardFront.setAttribute("data-id", "cardFront");
     card.appendChild(cardBack);
     card.appendChild(cardFront);
     return card;
   }
   addCardsToBoard(boardElement, shuffledImagesNamesArray) {
     for (let imageName of shuffledImagesNamesArray) {
-      let cardElement = returnCardElement(imgName);
+      let cardElement = this.returnCardElement(imageName);
       boardElement.appendChild(cardElement);
     }
   }
@@ -124,4 +133,29 @@ WindowGame.fruitImages = [
   "watermellon"
 ];
 WindowGame.board = document.querySelector(".cards");
-WindowGame.allocateImagesToGame = () => {};
+WindowGame.startNewGame = () => {
+  //handel get gameObject.theme
+};
+WindowGame.allocateImagesToGame = gameObject => {
+  let imagesArray;
+  if (gameObject.theme === "animals") {
+    imagesArray = gameObject.getRandomDuplicateImages(WindowGame.animalImages);
+    gameObject.addCardsToBoard(WindowGame.board, imagesArray);
+  } else if (gameObject.theme === "fruits") {
+    imagesArray = gameObject.getRandomDuplicateImages(WindowGame.fruitImages);
+    gameObject.addCardsToBoard(WindowGame.board, imagesArray);
+  } else if (gameObject.theme === "vegetables") {
+    imagesArray = gameObject.getRandomDuplicateImages(
+      WindowGame.veggetableImages
+    );
+    gameObject.addCardsToBoard(WindowGame.board, imagesArray);
+  }
+};
+WindowGame.start = () => {
+  //WindowGame.dosomething();
+  let newGame = new Game();
+  console.log(newGame);
+  WindowGame.allocateImagesToGame(newGame);
+};
+WindowGame.start();
+console.log(WindowGame.board);
