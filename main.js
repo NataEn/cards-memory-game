@@ -15,7 +15,6 @@ class Board {
   constructor(theme = "animals", difficulty = 6) {
     this.theme = theme;
     this.difficulty = difficulty;
-    this.activeCards = [];
   }
   shuffleCards = imagesArray => {
     let j, x, i;
@@ -60,6 +59,7 @@ class Board {
     );
     cardFront.setAttribute("class", "card-flip card-front img-thumbnail");
     cardFront.setAttribute("data-id", `${imgName}`);
+    card.setAttribute("data-id", `${imgName}`);
     card.appendChild(cardBack);
     card.appendChild(cardFront);
     return card;
@@ -68,26 +68,6 @@ class Board {
     for (let imageName of shuffledImagesNamesArray) {
       let cardElement = this.returnCardElement(imageName);
       boardElement.appendChild(cardElement);
-    }
-  }
-  // stopFlippingCards() {
-  //   if (this.activeCards.length == 2) {
-  //     let cardsNotfliped = document.querySelectorAll(
-  //       ".card-image-container:not(.active-front):not(.active-back)"
-  //     );
-  //     for (let card of cardsNotfliped) {
-  //       card.setAttribute("style", "pointer-events: none;");
-  //     }
-  //   }
-  // }
-  checkIfCardsEqual(cardOneId, CardTwoId) {
-    if (cardOneId === CardTwoId) {
-      //keep them open==remove event listener from card
-      //add a point to users score
-      //open further clicking on cards
-    } else {
-      //start timer
-      //add 1 to wrong Moves
     }
   }
 }
@@ -154,7 +134,9 @@ class Game {
       "strawberry",
       "watermellon"
     ];
+    this.player = new Player();
     this.board = new Board();
+    this.activeCards = [];
     this.boardElement = document.querySelector(".cards");
     this.cardElements;
     this.timer = document.querySelector("#timer");
@@ -178,29 +160,33 @@ class Game {
     this.cardElements = document.querySelectorAll(".card-image-container");
     for (let element of this.cardElements) {
       element.addEventListener("click", event => {
-        element.classList.add("active-front");
-        element.classList.add("active-back");
+        element.classList.toggle("active-front");
+        element.classList.toggle("active-back");
         let cardIdentity = event.target.dataset.id;
-        this.board.activeCards.push(event.target);
         this.startTimer();
-
         console.log(cardIdentity);
       });
     }
   }
   startTimer() {
-    if (this.board.activeCards.length == 2) {
-      let cardsNotfliped = document.querySelectorAll(
-        ".card-image-container:not(.active-front):not(.active-back)"
-      );
-      for (let card of cardsNotfliped) {
+    this.activeCards = document.querySelectorAll(
+      ".card-image-container.active-front.active-back"
+    );
+    if (this.activeCards.length == 2) {
+      for (let card of this.cardElements) {
         card.setAttribute("style", "pointer-events: none;");
       }
-      this.showTimer();
-
-      //   for (let card of cardsNotfliped) {
-      //     card.removeAttribute("style", "pointer-events: none;");
-      //   }
+      //this.showTimer();
+      this.checkIfCardsEqual();
+      setTimeout(() => {
+        for (let card of this.cardElements) {
+          card.removeAttribute("style", "pointer-events: none;");
+        }
+        this.activeCards[0].classList.toggle("active-front");
+        this.activeCards[1].classList.toggle("active-front");
+        this.activeCards[0].classList.toggle("active-back");
+        this.activeCards[1].classList.toggle("active-back");
+      }, 3000);
     }
   }
   // showTimer() {
@@ -223,6 +209,16 @@ class Game {
   //     this.showTimer();
   //   }
   // }
+  checkIfCardsEqual() {
+    if (this.activeCards[0].dataset.id === this.activeCards[0].dataset.id) {
+      this.player.score += 1;
+      this.activeCards[0].setAttribute("style", "pointer-events: none;");
+      this.activeCards[1].setAttribute("style", "pointer-events: none;");
+    } else {
+      this.player.wrongMoves += 1;
+      this.activeCards = [];
+    }
+  }
   start() {
     this.allocateImagesToGame(this.boardElement);
     this.addEventListenerToBoardCards();
