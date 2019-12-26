@@ -12,7 +12,7 @@ class Player {
 }
 
 class Board {
-  constructor(theme = "animals", difficulty = 6) {
+  constructor(theme = "fruits", difficulty = 12) {
     this.theme = theme;
     this.difficulty = difficulty;
   }
@@ -65,6 +65,7 @@ class Board {
     return card;
   }
   addCardsToBoard(boardElement, shuffledImagesNamesArray) {
+    console.log(shuffledImagesNamesArray);
     for (let imageName of shuffledImagesNamesArray) {
       let cardElement = this.returnCardElement(imageName);
       boardElement.appendChild(cardElement);
@@ -143,18 +144,33 @@ class Game {
     this.seconds = 0;
     this.minutes = 0;
     this.correctMoves = 0;
+    this.wrongGuessesElement = document.querySelector("span.wrongGuesses");
+    this.scoreElement = document.querySelector("span.score");
+    this.selectDifficulty = document.querySelector("#difficulty");
+    this.selectedTheme = document.querySelector("#theme");
   }
-  allocateImagesToGame(boardElement) {
+  allocateImagesToGame() {
+    this.boardElement = document.querySelector(".cards");
+    this.boardElement.innerHTML = "";
+    console.log(
+      "allocating games resources",
+      this.boardElement,
+      this.board.theme,
+      this.board.difficulty
+    );
     let imagesArray;
     if (this.board.theme === "animals") {
+      console.log("allocated animals");
       imagesArray = this.board.getRandomDuplicateImages(this.animalImages);
-      this.board.addCardsToBoard(boardElement, imagesArray);
-    } else if (gameObject.theme === "fruits") {
+      this.board.addCardsToBoard(this.boardElement, imagesArray);
+    } else if (this.board.theme === "fruits") {
+      console.log("allocated fruits");
       imagesArray = this.board.getRandomDuplicateImages(this.fruitImages);
-      this.board.addCardsToBoard(boardElement, imagesArray);
-    } else if (gameObject.theme === "vegetables") {
+      this.board.addCardsToBoard(this.boardElement, imagesArray);
+    } else if (this.board.theme === "vegetables") {
+      console.log("allocated vegetables");
       imagesArray = this.board.getRandomDuplicateImages(this.veggetableImages);
-      this.board.addCardsToBoard(boardElement, imagesArray);
+      this.board.addCardsToBoard(this.boardElement, imagesArray);
     }
   }
   addEventListenerToBoardCards() {
@@ -168,6 +184,24 @@ class Game {
         console.log(cardIdentity);
       });
     }
+  }
+  listenToDifficultySelect() {
+    this.selectDifficulty.addEventListener("change", e => {
+      if (parseInt(e.target.value)) {
+        this.board.difficulty = parseInt(e.target.value);
+      }
+      console.log("difficulty", this.board.difficulty);
+      this.allocateImagesToGame();
+      this.addEventListenerToBoardCards();
+    });
+  }
+  listenToThemeSelect() {
+    this.selectedTheme.addEventListener("change", e => {
+      this.board.theme = e.target.value;
+      this.allocateImagesToGame();
+      this.addEventListenerToBoardCards();
+      console.log("theme", this.board.theme);
+    });
   }
   startTimer() {
     this.activeCards = document.querySelectorAll(
@@ -225,6 +259,7 @@ class Game {
   checkIfCardsEqual() {
     if (this.activeCards[0].dataset.id === this.activeCards[1].dataset.id) {
       this.player.score += 1;
+      this.scoreElement.innerHTML = this.player.score;
       this.correctMoves += 1;
       this.activeCards[0].classList.add("correct");
       this.activeCards[1].classList.add("correct");
@@ -232,13 +267,20 @@ class Game {
       this.checkIfWon();
     } else {
       this.player.wrongMoves += 1;
+      this.wrongGuessesElement.innerHTML = this.player.wrongMoves;
       this.activeCards = [];
       console.log("not a match" + this.player.wrongMoves);
     }
-    this.checkIfWon();
+  }
+  resetGame() {
+    this.board = new Board();
+    this.correctMoves = 0;
+    this.activeCards = [];
   }
   start() {
-    this.allocateImagesToGame(this.boardElement);
+    this.listenToDifficultySelect();
+    this.listenToThemeSelect();
+    this.allocateImagesToGame();
     this.addEventListenerToBoardCards();
   }
 }
