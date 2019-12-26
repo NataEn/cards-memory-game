@@ -29,13 +29,10 @@ class Game {
   };
   getRandomDuplicateImages = windowImagesNameArray => {
     let imagesForGame = [];
-    for (let i = 0; i < windowImagesNameArray.length; i++) {
+    while (imagesForGame.length < this.difficulty * 2) {
       let randomImageIndex = Math.floor(Math.random() * this.difficulty);
       let possibleImage = windowImagesNameArray[randomImageIndex];
-      if (
-        !imagesForGame.includes(possibleImage) &&
-        imagesForGame.length < this.difficulty * 2
-      ) {
+      if (!imagesForGame.includes(possibleImage)) {
         imagesForGame.push(...[possibleImage, possibleImage]);
       }
     }
@@ -49,21 +46,26 @@ class Game {
       "class",
       "card-image-container card-flip col-xs-4 col-md-2"
     );
+    card.addEventListener("click", event => {
+      card.classList.toggle("active-front");
+      card.classList.toggle("active-back");
+      let cardIdentity = event.target.dataset.id;
+      console.log(cardIdentity);
+    });
     let cardBack = document.createElement("div");
     cardBack.setAttribute(
       "style",
       `background-image:url("./img/${this.theme}/${imgName}.jpg")`
     );
     cardBack.setAttribute("class", "card-flip  card-back img-thumbnail");
-    cardBack.setAttribute("data-id", `cardBack-${imgName}`);
-    console.log(cardBack);
+
     let cardFront = document.createElement("div");
     cardFront.setAttribute(
       "style",
       'background-image:url("./img/cardFront.jpg")'
     );
     cardFront.setAttribute("class", "card-flip card-front img-thumbnail");
-    cardFront.setAttribute("data-id", "cardFront");
+    cardFront.setAttribute("data-id", `${imgName}`);
     card.appendChild(cardBack);
     card.appendChild(cardFront);
     return card;
@@ -72,6 +74,17 @@ class Game {
     for (let imageName of shuffledImagesNamesArray) {
       let cardElement = this.returnCardElement(imageName);
       boardElement.appendChild(cardElement);
+    }
+    checkIfCardsEqual(cardOneId,CardTwoId){
+      if(cardOneId===CardTwoId){
+        //keep them open
+        //add a point to users score
+        //open further clicking on cards
+      }
+      else{
+        //start timer
+        //add 1 to wrong Moves
+      }
     }
   }
 }
@@ -138,6 +151,7 @@ WindowGame.fruitImages = [
   "watermellon"
 ];
 WindowGame.board = document.querySelector(".cards");
+WindowGame.cardFlipped = document.querySelectorAll(".card-flip");
 WindowGame.startNewGame = () => {
   //handel get gameObject.theme
 };
@@ -156,8 +170,8 @@ WindowGame.allocateImagesToGame = gameObject => {
     gameObject.addCardsToBoard(WindowGame.board, imagesArray);
   }
 };
+WindowGame.returnFlippedCard = () => {};
 WindowGame.start = () => {
-  //WindowGame.dosomething();
   let newGame = new Game();
   console.log(newGame);
   WindowGame.allocateImagesToGame(newGame);

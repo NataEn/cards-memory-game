@@ -38,11 +38,11 @@ body {
   margin: 0;
 }
 
-.card-flip:hover .card-front {
+.active-front .card-front {
   transform: rotateY(-180deg);
 }
 
-.card-flip:hover .card-back {
+.active-back .card-back {
   transform: rotateY(0deg);
 }
 #timer {
