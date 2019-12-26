@@ -16,34 +16,8 @@
   </head>
   <body>
     <div class="container-fluid">
-      <div
-        class="modal fade"
-        id="exampleModal"
-        tabindex="-1"
-        role="dialog"
-        aria-labelledby="exampleModalLabel"
-        aria-hidden="true"
-      >
-        <div class="modal-dialog " role="document">
-          <div class="modal-content">
-            <div
-              class="modal-body d-flex justify-content-around align-items-center"
-            >
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-dismiss="modal"
-                data-start="start"
-              >
-                Start Game
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
       <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="#">Memory Game</a>
-
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
@@ -52,6 +26,7 @@
                 class="btn btn-primary"
                 data-toggle="modal"
                 data-target="#playersBoard"
+                id='newGame'
               >
                 New Game
               </button>
@@ -80,14 +55,6 @@
             data-target="#playersBoard"
           >
             Players
-          </button>
-          <button
-            type="button"
-            class="btn btn-warning"
-            data-toggle="modal"
-            data-target="#exampleModal"
-          >
-            Start Game
           </button>
           <button
             type="button"
@@ -134,27 +101,7 @@
                     >Your name and score will be on the Players board</small
                   >
                 </div>
-                <div class="form-group">
-                  <input
-                    type="email"
-                    class="form-control"
-                    id="email"
-                    aria-describedby="emailHelp"
-                    placeholder="Enter email"
-                  />
-                  <small id="emailHelp" class="form-text text-muted"
-                    >We'll never share your email with anyone else.</small
-                  >
-                </div>
-                <div class="form-group">
-                  <input
-                    type="password"
-                    class="form-control"
-                    id="password"
-                    placeholder="Password"
-                  />
-                </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-primary" id='#submit'>Submit</button>
                 <button
                   type="button"
                   class="btn btn-secondary"
@@ -178,9 +125,6 @@
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="playersBoardTitle">
-                Modal title
-              </h5>
               <button
                 type="button"
                 class="close"
@@ -190,8 +134,8 @@
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
-            <div class="modal-body">
-              ...
+            <div class="modal-body" id='won_or_start'>
+              
             </div>
             <div class="modal-footer">
               <button
@@ -200,9 +144,6 @@
                 data-dismiss="modal"
               >
                 Close
-              </button>
-              <button type="button" class="btn btn-primary">
-                Save changes
               </button>
             </div>
           </div>
@@ -220,7 +161,7 @@
       <div
         class="row justify-content-around align-items-center h-100 cards"
       >
-      <div id='timer'>Timer</div>
+      <!-- <div id='timer'>Timer</div> -->
     
     </div>
     <script

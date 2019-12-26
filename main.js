@@ -1,18 +1,26 @@
 class Player {
-  constructor(name, email, password) {
+  constructor(name) {
     this.name = name;
-    this.email = email;
-    this.password = password;
     this.score = 0;
     this.wrongMoves = 0;
+    this.submitNameButton = document.querySelector("#submit");
+    this.inputName = document.querySelector("input");
   }
+  listenForUserSubscription() {
+    console.log("entered subscription function");
+    this.inputName.addEventListener("input", e => {
+      e.preventDefault();
+      console.log(e.target.value);
+      this.name = e.target.value;
+    });
+  }
+  handelUserSubscription() {}
 
-  didWin(score) {}
   showInPlayersBoard(player) {}
 }
 
 class Board {
-  constructor(theme = "fruits", difficulty = 12) {
+  constructor(theme = "fruits", difficulty = 4) {
     this.theme = theme;
     this.difficulty = difficulty;
   }
@@ -140,7 +148,7 @@ class Game {
     this.activeCards = [];
     this.boardElement = document.querySelector(".cards");
     this.cardElements;
-    this.timer = document.querySelector("#timer");
+    //this.timer = document.querySelector("#timer");
     this.seconds = 0;
     this.minutes = 0;
     this.correctMoves = 0;
@@ -148,6 +156,8 @@ class Game {
     this.scoreElement = document.querySelector("span.score");
     this.selectDifficulty = document.querySelector("#difficulty");
     this.selectedTheme = document.querySelector("#theme");
+    this.newGameButton = document.querySelector("#newGame");
+    this.winnersModal = document.querySelector("#won_or_start");
   }
   allocateImagesToGame() {
     this.boardElement = document.querySelector(".cards");
@@ -252,6 +262,8 @@ class Game {
     );
     if (this.correctMoves === this.board.difficulty) {
       console.log("game Won");
+      this.showWinnerOnNewGameModal();
+      this.newGameButton.click();
     } else {
       console.log("game not Won");
     }
@@ -272,16 +284,28 @@ class Game {
       console.log("not a match" + this.player.wrongMoves);
     }
   }
+  showWinnerOnNewGameModal() {
+    this.winnersModal = document.querySelector("#won_or_start");
+    const modalContent = document.createElement("div");
+
+    this.winnersModal.innerHTML =
+      "You won the game! \n <h4>Our Best Player is:</h4>";
+    this.resetGame();
+  }
   resetGame() {
-    this.board = new Board();
-    this.correctMoves = 0;
-    this.activeCards = [];
+    this.newGameButton.addEventListener("click", () => {
+      this.board = new Board();
+      this.correctMoves = 0;
+      this.activeCards = [];
+      this.start();
+    });
   }
   start() {
     this.listenToDifficultySelect();
     this.listenToThemeSelect();
     this.allocateImagesToGame();
     this.addEventListenerToBoardCards();
+    this.player.listenForUserSubscription();
   }
 }
 let game = new Game();
