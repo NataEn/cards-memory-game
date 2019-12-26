@@ -46,15 +46,15 @@ class Board {
       "class",
       "card-image-container card-flip col-xs-4 col-md-2"
     );
-    card.addEventListener("click", event => {
-      card.classList.add("active-front");
-      card.classList.add("active-back");
-      let cardIdentity = event.target.dataset.id;
-      this.activeCards.push(event.target);
-      this.stopFlippingCards();
+    // card.addEventListener("click", event => {
+    //   card.classList.add("active-front");
+    //   card.classList.add("active-back");
+    //   let cardIdentity = event.target.dataset.id;
+    //   this.activeCards.push(event.target);
+    //   this.stopFlippingCards();
 
-      console.log(cardIdentity);
-    });
+    //   console.log(cardIdentity);
+    // });
     let cardBack = document.createElement("div");
     cardBack.setAttribute(
       "style",
@@ -81,11 +81,12 @@ class Board {
   }
   stopFlippingCards() {
     if (this.activeCards.length == 2) {
-      let cardsCreated = document.querySelectorAll(".card");
       let cardsNotfliped = document.querySelectorAll(
-        ".card:not(.active-front):not(.active-back)"
+        ".card-image-container:not(.active-front):not(.active-back)"
       );
-      console.log(document.querySelectorAll(".card"));
+      for (let card of cardsNotfliped) {
+        card.setAttribute("style", "pointer-events: none;");
+      }
       console.log(cardsNotfliped);
     }
     console.log(this.activeCards.length);
@@ -166,6 +167,7 @@ class Game {
     ];
     this.board = new Board();
     this.boardElement = document.querySelector(".cards");
+    this.cardElements;
   }
   allocateImagesToGame(boardElement) {
     let imagesArray;
@@ -180,102 +182,26 @@ class Game {
       this.board.addCardsToBoard(boardElement, imagesArray);
     }
   }
+  addEventListenerToBoardCards() {
+    this.cardElements = document.querySelectorAll(".card-image-container");
+    for (let element of this.cardElements) {
+      element.addEventListener("click", event => {
+        element.classList.add("active-front");
+        element.classList.add("active-back");
+        let cardIdentity = event.target.dataset.id;
+        this.board.activeCards.push(event.target);
+        this.board.stopFlippingCards();
+
+        console.log(cardIdentity);
+      });
+    }
+
+    console.log(this.cardElements);
+  }
   start() {
-    console.log(this.boardElement);
     this.allocateImagesToGame(this.boardElement);
+    this.addEventListenerToBoardCards();
   }
 }
 let game = new Game();
 game.start();
-// WindowGame = {};
-// WindowGame.animalImages = [
-//   "bird",
-//   "cat",
-//   "checken",
-//   "cow",
-//   "dogs",
-//   "donkey",
-//   "dolfin",
-//   "ducks",
-//   "fox",
-//   "giraffe",
-//   "hedgehog",
-//   "kengeru",
-//   "lion",
-//   "lutra",
-//   "mammoth",
-//   "monky",
-//   "perrot",
-//   "pugs",
-//   "sealion",
-//   "shark",
-//   "sheep",
-//   "slouth",
-//   "tiger",
-//   "zebra"
-// ];
-// WindowGame.veggetableImages = [
-//   "cabbage",
-//   "carob",
-//   "carrot",
-//   "caulliflower",
-//   "celery",
-//   "cucumber",
-//   "garlic",
-//   "lettuce",
-//   "onion",
-//   "paprika",
-//   "potato",
-//   "radish",
-//   "tomato"
-// ];
-// WindowGame.fruitImages = [
-//   "banana",
-//   "blueberry",
-//   "grapes",
-//   "guyava",
-//   "apple",
-//   "kiwi",
-//   "lemon",
-//   "litchi",
-//   "mandarina",
-//   "mellon",
-//   "orange",
-//   "peach",
-//   "pear",
-//   "pongranade",
-//   "raspberry",
-//   "strawberry",
-//   "watermellon"
-// ];
-// WindowGame.board = document.querySelector(".cards");
-// WindowGame.cardSNotFlipped;
-
-// WindowGame.totalCards = document.querySelectorAll(".card-flip");
-
-// WindowGame.startNewGame = () => {
-//   //handel get gameObject.theme
-// };
-// WindowGame.allocateImagesToGame = gameObject => {
-//   let imagesArray;
-//   if (gameObject.theme === "animals") {
-//     imagesArray = gameObject.getRandomDuplicateImages(WindowGame.animalImages);
-//     gameObject.addCardsToBoard(WindowGame.board, imagesArray);
-//   } else if (gameObject.theme === "fruits") {
-//     imagesArray = gameObject.getRandomDuplicateImages(WindowGame.fruitImages);
-//     gameObject.addCardsToBoard(WindowGame.board, imagesArray);
-//   } else if (gameObject.theme === "vegetables") {
-//     imagesArray = gameObject.getRandomDuplicateImages(
-//       WindowGame.veggetableImages
-//     );
-//     gameObject.addCardsToBoard(WindowGame.board, imagesArray);
-//   }
-// };
-// WindowGame.returnFlippedCard = () => {};
-// WindowGame.start = () => {
-//   let newBoard = new Board();
-//   console.log(newBoard);
-//   WindowGame.allocateImagesToGame(newBoard);
-// };
-// WindowGame.start();
-// console.log(WindowGame.board);
