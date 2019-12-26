@@ -46,15 +46,6 @@ class Board {
       "class",
       "card-image-container card-flip col-xs-4 col-md-2"
     );
-    // card.addEventListener("click", event => {
-    //   card.classList.add("active-front");
-    //   card.classList.add("active-back");
-    //   let cardIdentity = event.target.dataset.id;
-    //   this.activeCards.push(event.target);
-    //   this.stopFlippingCards();
-
-    //   console.log(cardIdentity);
-    // });
     let cardBack = document.createElement("div");
     cardBack.setAttribute(
       "style",
@@ -79,18 +70,16 @@ class Board {
       boardElement.appendChild(cardElement);
     }
   }
-  stopFlippingCards() {
-    if (this.activeCards.length == 2) {
-      let cardsNotfliped = document.querySelectorAll(
-        ".card-image-container:not(.active-front):not(.active-back)"
-      );
-      for (let card of cardsNotfliped) {
-        card.setAttribute("style", "pointer-events: none;");
-      }
-      console.log(cardsNotfliped);
-    }
-    console.log(this.activeCards.length);
-  }
+  // stopFlippingCards() {
+  //   if (this.activeCards.length == 2) {
+  //     let cardsNotfliped = document.querySelectorAll(
+  //       ".card-image-container:not(.active-front):not(.active-back)"
+  //     );
+  //     for (let card of cardsNotfliped) {
+  //       card.setAttribute("style", "pointer-events: none;");
+  //     }
+  //   }
+  // }
   checkIfCardsEqual(cardOneId, CardTwoId) {
     if (cardOneId === CardTwoId) {
       //keep them open==remove event listener from card
@@ -168,6 +157,9 @@ class Game {
     this.board = new Board();
     this.boardElement = document.querySelector(".cards");
     this.cardElements;
+    this.timer = document.querySelector("#timer");
+    this.seconds = 0;
+    this.minutes = 0;
   }
   allocateImagesToGame(boardElement) {
     let imagesArray;
@@ -190,14 +182,47 @@ class Game {
         element.classList.add("active-back");
         let cardIdentity = event.target.dataset.id;
         this.board.activeCards.push(event.target);
-        this.board.stopFlippingCards();
+        this.startTimer();
 
         console.log(cardIdentity);
       });
     }
-
-    console.log(this.cardElements);
   }
+  startTimer() {
+    if (this.board.activeCards.length == 2) {
+      let cardsNotfliped = document.querySelectorAll(
+        ".card-image-container:not(.active-front):not(.active-back)"
+      );
+      for (let card of cardsNotfliped) {
+        card.setAttribute("style", "pointer-events: none;");
+      }
+      this.showTimer();
+
+      //   for (let card of cardsNotfliped) {
+      //     card.removeAttribute("style", "pointer-events: none;");
+      //   }
+    }
+  }
+  // showTimer() {
+  //   const setSeconds = setTimeout(() => {
+  //     this.seconds++;
+  //     if ((this.seconds = 60)) {
+  //       this.seconds = 0;
+  //       this.minutes++;
+  //     }
+  //     timer.innerText = `${this.minutes}:${
+  //       this.seconds > 9 ? this.seconds : "0" + this.seconds
+  //     }`;
+  //   }, 10000);
+  //   if (this.minutes === 1) {
+  //     clearTimeout(setSeconds);
+  //     this.seconds = 0;
+  //     this.minutes = 0;
+  //     return;
+  //   } else {
+  //     this.showTimer();
+  //   }
+  // }
   start() {
     this.allocateImagesToGame(this.boardElement);
     this.addEventListenerToBoardCards();
