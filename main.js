@@ -142,6 +142,7 @@ class Game {
     this.timer = document.querySelector("#timer");
     this.seconds = 0;
     this.minutes = 0;
+    this.correctMoves = 0;
   }
   allocateImagesToGame(boardElement) {
     let imagesArray;
@@ -177,7 +178,7 @@ class Game {
         card.setAttribute("style", "pointer-events: none;");
       }
       //this.showTimer();
-      this.checkIfCardsEqual();
+
       setTimeout(() => {
         for (let card of this.cardElements) {
           card.removeAttribute("style", "pointer-events: none;");
@@ -186,7 +187,8 @@ class Game {
         this.activeCards[1].classList.toggle("active-front");
         this.activeCards[0].classList.toggle("active-back");
         this.activeCards[1].classList.toggle("active-back");
-      }, 3000);
+        this.checkIfCardsEqual();
+      }, 1000);
     }
   }
   // showTimer() {
@@ -209,15 +211,31 @@ class Game {
   //     this.showTimer();
   //   }
   // }
+  checkIfWon() {
+    console.log(
+      "this.correctMoves" + this.correctMoves,
+      "this.board.difficulty" + this.board.difficulty
+    );
+    if (this.correctMoves === this.board.difficulty) {
+      console.log("game Won");
+    } else {
+      console.log("game not Won");
+    }
+  }
   checkIfCardsEqual() {
-    if (this.activeCards[0].dataset.id === this.activeCards[0].dataset.id) {
+    if (this.activeCards[0].dataset.id === this.activeCards[1].dataset.id) {
       this.player.score += 1;
-      this.activeCards[0].setAttribute("style", "pointer-events: none;");
-      this.activeCards[1].setAttribute("style", "pointer-events: none;");
+      this.correctMoves += 1;
+      this.activeCards[0].classList.add("correct");
+      this.activeCards[1].classList.add("correct");
+      console.log("a match" + this.player.score);
+      this.checkIfWon();
     } else {
       this.player.wrongMoves += 1;
       this.activeCards = [];
+      console.log("not a match" + this.player.wrongMoves);
     }
+    this.checkIfWon();
   }
   start() {
     this.allocateImagesToGame(this.boardElement);

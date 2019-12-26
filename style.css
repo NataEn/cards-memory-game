@@ -57,3 +57,13 @@ body {
   box-shadow: 0px 1px 7px 4px #0000003d;
   cursor: move;
 }
+.correct {
+  pointer-events: none;
+}
+.correct .card-front {
+  transform: rotateY(-180deg);
+}
+
+.correct .card-back {
+  transform: rotateY(0deg);
+}
