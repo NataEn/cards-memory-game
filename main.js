@@ -27,13 +27,15 @@ class Game {
     }
     return imagesArray;
   };
-  //fix to have 12 cards
   getRandomDuplicateImages = windowImagesNameArray => {
     let imagesForGame = [];
-    for (let i = 0; i < this.difficulty; i++) {
+    for (let i = 0; i < windowImagesNameArray.length; i++) {
       let randomImageIndex = Math.floor(Math.random() * this.difficulty);
       let possibleImage = windowImagesNameArray[randomImageIndex];
-      if (!imagesForGame.includes(possibleImage)) {
+      if (
+        !imagesForGame.includes(possibleImage) &&
+        imagesForGame.length < this.difficulty * 2
+      ) {
         imagesForGame.push(...[possibleImage, possibleImage]);
       }
     }
@@ -43,13 +45,16 @@ class Game {
   };
   returnCardElement(imgName) {
     let card = document.createElement("div");
-    card.setAttribute("class", " card-image-container card-flip");
+    card.setAttribute(
+      "class",
+      "card-image-container card-flip col-xs-4 col-md-2"
+    );
     let cardBack = document.createElement("div");
     cardBack.setAttribute(
       "style",
       `background-image:url("./img/${this.theme}/${imgName}.jpg")`
     );
-    cardBack.setAttribute("class", " card-flip  card-back");
+    cardBack.setAttribute("class", "card-flip  card-back img-thumbnail");
     cardBack.setAttribute("data-id", `cardBack-${imgName}`);
     console.log(cardBack);
     let cardFront = document.createElement("div");
@@ -57,7 +62,7 @@ class Game {
       "style",
       'background-image:url("./img/cardFront.jpg")'
     );
-    cardFront.setAttribute("class", "card-flip card-front");
+    cardFront.setAttribute("class", "card-flip card-front img-thumbnail");
     cardFront.setAttribute("data-id", "cardFront");
     card.appendChild(cardBack);
     card.appendChild(cardFront);
