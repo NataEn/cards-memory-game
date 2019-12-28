@@ -5,6 +5,12 @@ class Player {
     this.wrongMoves = 0;
     this.submitNameButton = document.querySelector("#submit");
     this.inputName = document.querySelector("input");
+    this.playersStorage = window.localStorage;
+    this.userData = {
+      name: this.name,
+      score: this.score,
+      wrong_moves: this.wrongMoves
+    };
   }
   listenForUserSubscription() {
     console.log("entered subscription function");
@@ -14,9 +20,38 @@ class Player {
       this.name = e.target.value;
     });
   }
-  handelUserSubscription() {}
-
-  showInPlayersBoard(player) {}
+  returnUserData() {
+    this.userData = {
+      name: this.name,
+      score: this.score,
+      wrongMoves: this.wrongMoves
+    };
+    return this.userData;
+  }
+  handelUserSubscription() {
+    let currentPlayer = this.returnUserData();
+    this.submitNameButton.addEventListener("click", () => {
+      this.playersStorage.setItem(
+        "currentPlayer",
+        JSON.stringify(currentPlayer)
+      );
+    });
+  }
+  setBestPlayer() {
+    let playerInStorage = JSON.parse(this.playersStorage.getItem("bestPlayer"));
+    let currentPlayer = this.returnUserData();
+    console.log(playerInStorage, currentPlayer);
+    if (!playerInStorage) {
+      this.playersStorage.setItem("bestPlayer", JSON.stringify(currentPlayer));
+      return this.returnUserData();
+    } else if (
+      playerInStorage.score < this.score &&
+      playerInStorage.wrongMoves < this.wrongMoves
+    ) {
+      this.playersStorage.setItem("bestPlayer", JSON.stringify(currentPlayer));
+      return currentPlayer;
+    } else return playerInStorage;
+  }
 }
 
 class Board {
@@ -143,7 +178,7 @@ class Game {
       "strawberry",
       "watermellon"
     ];
-    this.player = new Player();
+    this.player = new Player("Player");
     this.board = new Board();
     this.activeCards = [];
     this.boardElement = document.querySelector(".cards");
@@ -256,6 +291,7 @@ class Game {
   //   }
   // }
   checkIfWon() {
+    this.player.returnUserData();
     console.log(
       "this.correctMoves" + this.correctMoves,
       "this.board.difficulty" + this.board.difficulty
@@ -285,11 +321,14 @@ class Game {
     }
   }
   showWinnerOnNewGameModal() {
+    let gameWinner = this.player.setBestPlayer();
+    console.log(gameWinner);
     this.winnersModal = document.querySelector("#won_or_start");
-    const modalContent = document.createElement("div");
+    //const modalContent = document.createElement("div");
 
     this.winnersModal.innerHTML =
-      "You won the game! \n <h4>Our Best Player is:</h4>";
+      "You finished the puzzel! \n <h4>Our Best Player is:</h4>" +
+      `${gameWinner.name} with score of ${gameWinner.score} and with the minimal ${gameWinner.wrongMoves} wrong moves`;
     this.resetGame();
   }
   resetGame() {
