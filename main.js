@@ -14,10 +14,15 @@ class Player {
   }
   listenForUserSubscription() {
     console.log("entered subscription function");
+    debugger;
     this.inputName.addEventListener("input", e => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log(e.target.value);
       this.name = e.target.value;
+    });
+    this.submitNameButton.addEventListener("click", () => {
+      console.log("entered submit");
+      this.playersStorage.setItem("currentPlayer", this.name);
     });
   }
   returnUserData() {
@@ -28,15 +33,13 @@ class Player {
     };
     return this.userData;
   }
-  handelUserSubscription() {
-    let currentPlayer = this.returnUserData();
-    this.submitNameButton.addEventListener("click", () => {
-      this.playersStorage.setItem(
-        "currentPlayer",
-        JSON.stringify(currentPlayer)
-      );
-    });
-  }
+  // handelUserSubscription() {
+  //   console.log(this.submitNameButton);
+  //   this.submitNameButton.addEventListener("click", () => {
+  //     console.log("entered submit");
+  //     this.playersStorage.setItem("currentPlayer", this.name);
+  //   });
+  // }
   setBestPlayer() {
     let playerInStorage = JSON.parse(this.playersStorage.getItem("bestPlayer"));
     let currentPlayer = this.returnUserData();
@@ -192,6 +195,7 @@ class Game {
     this.selectDifficulty = document.querySelector("#difficulty");
     this.selectedTheme = document.querySelector("#theme");
     this.newGameButton = document.querySelector("#newGame");
+    this.subscribeButton = document.querySelector("#subscribe");
     this.winnersModal = document.querySelector("#won_or_start");
   }
   allocateImagesToGame() {
