@@ -58,7 +58,7 @@ class Player {
 }
 
 class Board {
-  constructor(theme = "fruits", difficulty = 4) {
+  constructor(theme = "fruits", difficulty = 6) {
     this.theme = theme;
     this.difficulty = difficulty;
   }
@@ -274,26 +274,6 @@ class Game {
       }, 1000);
     }
   }
-  // showTimer() {
-  //   const setSeconds = setTimeout(() => {
-  //     this.seconds++;
-  //     if ((this.seconds = 60)) {
-  //       this.seconds = 0;
-  //       this.minutes++;
-  //     }
-  //     timer.innerText = `${this.minutes}:${
-  //       this.seconds > 9 ? this.seconds : "0" + this.seconds
-  //     }`;
-  //   }, 10000);
-  //   if (this.minutes === 1) {
-  //     clearTimeout(setSeconds);
-  //     this.seconds = 0;
-  //     this.minutes = 0;
-  //     return;
-  //   } else {
-  //     this.showTimer();
-  //   }
-  // }
   checkIfWon() {
     this.player.returnUserData();
     console.log(
@@ -301,11 +281,8 @@ class Game {
       "this.board.difficulty" + this.board.difficulty
     );
     if (this.correctMoves === this.board.difficulty) {
-      console.log("game Won");
       this.showWinnerOnNewGameModal();
       this.newGameButton.click();
-    } else {
-      console.log("game not Won");
     }
   }
   checkIfCardsEqual() {
@@ -328,7 +305,6 @@ class Game {
     let gameWinner = this.player.setBestPlayer();
     console.log(gameWinner);
     this.winnersModal = document.querySelector("#won_or_start");
-    //const modalContent = document.createElement("div");
 
     this.winnersModal.innerHTML =
       "You finished the puzzel! \n <h4>Our Best Player is:</h4>" +
