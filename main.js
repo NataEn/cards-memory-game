@@ -25,6 +25,10 @@ class Player {
       this.playersStorage.setItem("currentPlayer", this.name);
     });
   }
+  resetUserScoreandMoves() {
+    this.score = 0;
+    this.wrongMoves = 0;
+  }
   returnUserData() {
     this.userData = {
       name: this.name,
@@ -276,7 +280,8 @@ class Game {
     if (this.correctMoves === this.board.difficulty) {
       this.showWinnerOnNewGameModal();
       this.newGameButton.click();
-    }
+      return true;
+    } else return false;
   }
   checkIfCardsEqual() {
     if (this.activeCards[0].dataset.id === this.activeCards[1].dataset.id) {
@@ -285,7 +290,6 @@ class Game {
       this.correctMoves += 1;
       this.activeCards[0].classList.add("correct");
       this.activeCards[1].classList.add("correct");
-      console.log("a match" + this.player.score);
       this.checkIfWon();
     } else {
       this.player.wrongMoves += 1;
@@ -304,11 +308,20 @@ class Game {
   }
   resetGame() {
     this.newGameButton.addEventListener("click", () => {
-      this.winnersModal.innerHTML = "Starting new Game";
-      this.board = new Board();
-      this.correctMoves = 0;
-      this.activeCards = [];
-      this.start();
+      debugger;
+      console.log("new game");
+      if (this.checkIfWon()) {
+        console.log("clicked new game", this.checkIfWon());
+        this.board = new Board();
+        this.correctMoves = 0;
+        this.activeCards = [];
+        this.start();
+      } else {
+        this.player.resetUserScoreandMoves();
+        this.winnersModal.innerHTML = "Starting new Game";
+        this.scoreElement.innerHTML = this.player.score;
+        this.wrongGuessesElement.innerHTML = this.player.wrongMoves;
+      }
     });
   }
   start() {
@@ -317,6 +330,7 @@ class Game {
     this.allocateImagesToGame();
     this.addEventListenerToBoardCards();
     this.player.listenForUserSubscription();
+    this.resetGame();
   }
 }
 let game = new Game();
