@@ -111,7 +111,6 @@ class Board {
     return card;
   }
   addCardsToBoard(boardElement, shuffledImagesNamesArray) {
-    console.log(shuffledImagesNamesArray);
     for (let imageName of shuffledImagesNamesArray) {
       let cardElement = this.returnCardElement(imageName);
       boardElement.appendChild(cardElement);
@@ -186,7 +185,6 @@ class Game {
     this.activeCards = [];
     this.boardElement = document.querySelector(".cards");
     this.cardElements;
-    //this.timer = document.querySelector("#timer");
     this.seconds = 0;
     this.minutes = 0;
     this.correctMoves = 0;
@@ -260,7 +258,6 @@ class Game {
       for (let card of this.cardElements) {
         card.setAttribute("style", "pointer-events: none;");
       }
-      //this.showTimer();
 
       setTimeout(() => {
         for (let card of this.cardElements) {
@@ -276,10 +273,6 @@ class Game {
   }
   checkIfWon() {
     this.player.returnUserData();
-    console.log(
-      "this.correctMoves" + this.correctMoves,
-      "this.board.difficulty" + this.board.difficulty
-    );
     if (this.correctMoves === this.board.difficulty) {
       this.showWinnerOnNewGameModal();
       this.newGameButton.click();
@@ -298,12 +291,10 @@ class Game {
       this.player.wrongMoves += 1;
       this.wrongGuessesElement.innerHTML = this.player.wrongMoves;
       this.activeCards = [];
-      console.log("not a match" + this.player.wrongMoves);
     }
   }
   showWinnerOnNewGameModal() {
     let gameWinner = this.player.setBestPlayer();
-    console.log(gameWinner);
     this.winnersModal = document.querySelector("#won_or_start");
 
     this.winnersModal.innerHTML =
@@ -313,6 +304,7 @@ class Game {
   }
   resetGame() {
     this.newGameButton.addEventListener("click", () => {
+      this.winnersModal.innerHTML = "Starting new Game";
       this.board = new Board();
       this.correctMoves = 0;
       this.activeCards = [];
